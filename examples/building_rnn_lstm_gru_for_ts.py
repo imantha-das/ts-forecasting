@@ -1,6 +1,7 @@
 import os 
 import pandas as pd 
 import numpy as np 
+import scipy
 
 import plotly.graph_objs as go 
 import plotly.io as pio 
@@ -19,6 +20,10 @@ from sklearn.compose import ColumnTransformer, make_column_transformer
 import holidays
 
 from termcolor import colored
+
+# Tutorial from
+# https://towardsdatascience.com/building-rnn-lstm-and-gru-for-time-series-using-pytorch-a46e5b094e7b
+# 
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Read Data
@@ -128,9 +133,11 @@ def one_hot_encode(df, col_names):
 
     print(colored(one_hot_arr.shape, "magenta"))
     
+    if isinstance(one_hot_arr, scipy.sparse.csr.csr_matrix):
+        df_one_hot = pd.DataFrame(data = one_hot_arr.toarray(), columns=column_names)
+    else:
+        df_one_hot = pd.DataFrame(data = one_hot_arr, columns=column_names)
 
-    df_one_hot = pd.DataFrame(data = one_hot_arr, columns=column_names)
-    print(colored(df_one_hot.columns.values, "magenta"))
     return df_one_hot
 
 
@@ -156,22 +163,9 @@ if __name__ == "__main__":
     us_holidays = holidays.US()
     df_features = add_holiday_col(df_features, us_holidays)
 
-    #print(df_features.columns.values)
-    """
-    df_test = pd.DataFrame({
-        "x" : np.random.rand(10),
-        "y" : np.random.rand(10),
-        "z1" : np.random.randint(1,3,10),
-        "z2" : np.random.randint(1,4,10)
-    })
+    print(df_features.info())
+    # one hot encode
+    df_features = one_hot_encode(df_features, col_names=["month", "day_of_week"])
+    print(df_features.head())
+    print(df_features.info())
 
-    df_test = one_hot_encode(df_test, ["z1", "z2"])
-    print(df_test)
-    """
-    
-    df_features = one_hot_encode(df_features, ["month", "day_of_week", "week_of_year"])
-
-    print(df_features)
-
-    #df_features = one_hot_encode(df_features, col_names=["month", "day", "day_of_week", "week_of_year"])
-    #print(df_features.head())
