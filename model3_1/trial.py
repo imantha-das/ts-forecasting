@@ -57,6 +57,8 @@ search_params = nni.get_next_parameter()
 learning_rate = search_params["learning_rate"]
 hidden_size = search_params["hidden_size"]
 optimizer_name = search_params["optimizer"]
+batch_size = search_params["batch_size"]
+window_size = search_params["window_size"]
 
 # ==============================================================================
 # Load Data
@@ -72,8 +74,8 @@ df = df[:3475] #Removed the messed up timeseries data
 # ==============================================================================
 # Feature Extraction
 # ==============================================================================
-
-df_generated = generate_time_lags(df, 24) # Adds time lags
+#window_size = 24 # window size #* uncomment this if not using search.py (nni)
+df_generated = generate_time_lags(df, window_size) # Adds time lags
 df_features = generate_time_features(df_generated) #Adds hour and day of week
 df_features = pd.get_dummies(df_features, columns = ["day_of_week"]) #one hot encode dayofweek columns
 df_features = generate_cyclic_features(df_features, "hour", 24, 0)
@@ -106,7 +108,7 @@ X_train_norm, X_val_norm, X_test_norm, y_train_norm, y_val_norm, y_test_norm, no
 # Dataloader
 # ==============================================================================
 
-batch_size = 64
+#batch_size = 64 #* uncomment this (repeated below) if not using search.py (nni)
 
 train_features = torch.Tensor(X_train_norm)
 train_targets = torch.Tensor(y_train_norm)
@@ -251,7 +253,7 @@ input_size = len(X_train.columns) # 106
 output_size = 1
 #hidden_size = 64 #* uncomment this if not running through search.py (nni)
 layer_size = 2
-batch_size = 64
+#batch_size = 64 #* uncomment this if not running through search.py (nni)
 dropout_prob = 0.2 
 n_epochs = 500
 #learning_rate = 1e-3 #* uncomment this if not running through search.py (nni)
@@ -288,13 +290,13 @@ p1.add_trace(go.Scatter(y = training_losses, name = "training losses"))
 p1.add_trace(go.Scatter(y = validation_losses, name = "validation losses"))
 p1.update_layout(xaxis_title = "epochs", yaxis_title = "losses")
 p1.update_layout(title = "LSTM - Mean Squred error on normalised data")
-p1.show()
+#p1.show()
 
 
 # ==============================================================================
 # Prediction on testset
 # ==============================================================================
-predictions, values = opt.evaluate(test_loader, batch_size = 64, n_features = input_size)
+predictions, values = opt.evaluate(test_loader, batch_size = batch_size, n_features = input_size)
 df_result = format_predictions(predictions, values, X_test, normalizer) 
 result_metrics = calculate_metrics(df_result)
 
@@ -310,4 +312,4 @@ p2 = go.Figure()
 p2.add_trace(go.Scatter(x = df_result.index, y = df_result.value, name = "original ts"))
 p2.add_trace(go.Scatter(x = df_result.index, y = df_result.predictions, name = "lstm prediction"))
 p2.update_layout(title = "Energy Load")
-p2.show()
+#p2.show()

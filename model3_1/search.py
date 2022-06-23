@@ -7,10 +7,13 @@ import os
 print(os.getcwd())
 print(Path(__file__).parent)
 
+#* Other hyperparams to tune, batch_size, sliding_window
 search_space = {
     "learning_rate" : {"_type" : "choice", "_value" : [0.001, 0.005, 0.01]},
     "hidden_size" : {"_type" : "choice", "_value" : [16,32,64,128]},
-    "optimizer" : {"_type" : "choice", "_value" : ["adam", "sgd", "adamax"]}
+    "optimizer" : {"_type" : "choice", "_value" : ["adam", "sgd", "adamax"]},
+    "batch_size" : {"_type" : "choice", "_value" : [32,64,128,256]},
+    "window_size" : {"_type" : "choice", "_value" : [24,72,168]}
 }
 
 # Maximum number of trials
