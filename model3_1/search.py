@@ -13,7 +13,8 @@ search_space = {
     "hidden_size" : {"_type" : "choice", "_value" : [16,32,64,128]},
     "optimizer" : {"_type" : "choice", "_value" : ["adam", "sgd", "adamax"]},
     "batch_size" : {"_type" : "choice", "_value" : [32,64,128,256]},
-    "window_size" : {"_type" : "choice", "_value" : [24,72,168]}
+    "window_size" : {"_type" : "choice", "_value" : [24,72,168]},
+    "model" : {"_type" : "choice", "_value" : ["gru", "lstm"]}
 }
 
 # Maximum number of trials

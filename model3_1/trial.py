@@ -59,6 +59,7 @@ hidden_size = search_params["hidden_size"]
 optimizer_name = search_params["optimizer"]
 batch_size = search_params["batch_size"]
 window_size = search_params["window_size"]
+model_name = search_params["model"]
 
 # ==============================================================================
 # Load Data
@@ -271,7 +272,9 @@ optimizers = {
     "adamax" : optim.Adamax
 }
 
-model = get_model("lstm", model_params)
+
+#model = get_model("lstm", model_params) #* Uncomment this if you are not using search.py (nni)
+model = get_model(model_name,model_params)
 criterion = nn.MSELoss(reduction = "mean")
 #optimizer = optim.Adam(model.parameters(), lr = learning_rate, weight_decay=weight_decay) #* uncomment this if not running through search.py
 optimizer = optimizers[optimizer_name](params = model.parameters(), lr = learning_rate, weight_decay = weight_decay)
