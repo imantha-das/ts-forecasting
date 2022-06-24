@@ -12,7 +12,7 @@ class GRUModel(nn.Module):
         self.gru = nn.GRU(input_size = input_size, hidden_size = hidden_size, num_layers = layer_size, batch_first = True, dropout = dropout_prob)
         # FCC
         # (*, H_in) ---> (*, H_out)
-        self.fc = nn.Linear(in_features=hidden_size, out_features = 1)
+        self.fc = nn.Linear(in_features=hidden_size, out_features = output_size)
         
     def forward(self, x):
         # initialize hidden state
