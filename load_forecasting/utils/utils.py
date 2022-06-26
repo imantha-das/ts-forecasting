@@ -165,7 +165,16 @@ if __name__ == "__main__":
     #? Note after normalising y has a shape of (*, 1)
     X_train_norm, X_val_norm, X_test_norm, y_train_norm, y_val_norm, y_test_norm = norm_data
     
-
+    # Get torch datasets
+    train_loader, val_loader, test_loader = torch_dataset(
+        X_train_norm, 
+        X_val_norm, 
+        X_test_norm, 
+        y_train_norm, 
+        y_val_norm, 
+        y_test_norm,
+        batch_size = 64
+    )
 
 
 
