@@ -87,7 +87,7 @@ def normalise(X_train:np.array, X_val:np.array, X_test:np.array, y_train:np.arra
         Normalised train-validation-test sets
         normaliser 
     """
-    normaliser = MinMaxScaler()
+    normaliser = MinMaxScaler(feature_range=(-1,1))
     X_train_norm = normaliser.fit_transform(X_train)
     X_val_norm = normaliser.fit_transform(X_val)
     X_test_norm = normaliser.fit_transform(X_test)
@@ -126,6 +126,21 @@ def torch_dataset(X_train:np.array, X_val:np.array, X_test:np.array, y_train:np.
     test_loader = DataLoader(test_data, batch_size = batch_size, shuffle = False, drop_last = True)
 
     return train_loader, val_loader, test_loader
+
+# ------------------------------------------------------------------------------
+# Un-normalise
+# ------------------------------------------------------------------------------
+def inverse_normalise(data, normaliser):
+    """
+    Desc : Un-normalises the previously normalised dataset
+    Inputs 
+        data : sequence / target predictions
+        normaliser : sklearn normaliser object
+    Outputs
+        y : un-normalised data
+    """
+    y = normaliser.inverse_transform(data.reshape(-1,1))
+    return y
 
 
 # ==============================================================================

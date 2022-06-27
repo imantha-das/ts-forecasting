@@ -44,5 +44,6 @@ def add_hour_dow(df:pd.DataFrame, last_date:str = "2022-05-15 23:00:00", endpoin
 if __name__ == "__main__":
     df = load_dataset(path = "data/load.xlsx")
     df = add_hour_dow(df)
+    df = df[:3475]
     df.to_csv(path_or_buf="data/load_ammended.csv", index = False)
 
